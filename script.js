@@ -1,9 +1,6 @@
-
-
 function rand(max) {
   return Math.floor(Math.random() * max);
 }
-
 function shuffle(a) {
   for (let i = a.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -11,7 +8,6 @@ function shuffle(a) {
   }
   return a;
 }
-
 function changeBrightness(factor, sprite) {
   var virtCanvas = document.createElement("canvas");
   virtCanvas.width = 500;
@@ -20,25 +16,21 @@ function changeBrightness(factor, sprite) {
   context.drawImage(sprite, 0, 0, 500, 500);
 
   var imgData = context.getImageData(0, 0, 500, 500);
-
   for (let i = 0; i < imgData.data.length; i += 4) {
     imgData.data[i] = imgData.data[i] * factor;
     imgData.data[i + 1] = imgData.data[i + 1] * factor;
     imgData.data[i + 2] = imgData.data[i + 2] * factor;
   }
   context.putImageData(imgData, 0, 0);
-
   var spriteOutput = new Image();
   spriteOutput.src = virtCanvas.toDataURL();
   virtCanvas.remove();
   return spriteOutput;
 }
-
 function displayVictoryMess(moves) {
   document.getElementById("moves").innerHTML = "You Moved " + moves + " Steps.";
   toggleVisablity("Message-Container");
 }
-
 function toggleVisablity(id) {
   if (document.getElementById(id).style.visibility == "visible") {
     document.getElementById(id).style.visibility = "hidden";
@@ -91,27 +83,18 @@ function Maze(Width, Height) {
   var dirs = ["n", "s", "e", "w"];
   var modDir = {
     n: {
-      y: -1,
-      x: 0,
-      o: "s"
+      y: -1, x: 0, o: "s"
     },
     s: {
-      y: 1,
-      x: 0,
-      o: "n"
+      y: 1, x: 0, o: "n"
     },
     e: {
-      y: 0,
-      x: 1,
-      o: "w"
+      y: 0, x: 1, o: "w"
     },
     w: {
-      y: 0,
-      x: -1,
-      o: "e"
+      y: 0, x: -1, o: "e"
     }
   };
-
   this.map = function () {
     return mazeMap;
   };
@@ -121,24 +104,17 @@ function Maze(Width, Height) {
   this.endCoord = function () {
     return endCoord;
   };
-
   function genMap() {
     mazeMap = new Array(height);
     for (y = 0; y < height; y++) {
       mazeMap[y] = new Array(width);
       for (x = 0; x < width; ++x) {
         mazeMap[y][x] = {
-          n: false,
-          s: false,
-          e: false,
-          w: false,
-          visited: false,
-          priorPos: null
+          n: false, s: false, e: false, w: false, visited: false, priorPos: null
         };
       }
     }
   }
-
   function defineMaze() {
     var isComp = false;
     var move = false;
@@ -146,14 +122,12 @@ function Maze(Width, Height) {
     var numLoops = 0;
     var maxLoops = 0;
     var pos = {
-      x: 0,
-      y: 0
+      x: 0, y: 0
     };
     var numCells = width * height;
     while (!isComp) {
       move = false;
       mazeMap[pos.x][pos.y].visited = true;
-
       if (numLoops >= maxLoops) {
         shuffle(dirs);
         maxLoops = Math.round(rand(height / 8));
@@ -164,107 +138,82 @@ function Maze(Width, Height) {
         var direction = dirs[index];
         var nx = pos.x + modDir[direction].x;
         var ny = pos.y + modDir[direction].y;
-
         if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
-          //Check if the tile is already visited
-          if (!mazeMap[nx][ny].visited) {
-            //Carve through walls from this tile to next
-            mazeMap[pos.x][pos.y][direction] = true;
+        if (!mazeMap[nx][ny].visited) {//Check if the tile is already visited
+            mazeMap[pos.x][pos.y][direction] = true;//Carve through walls from this tile to next
             mazeMap[nx][ny][modDir[direction].o] = true;
-
-            //Set Currentcell as next cells Prior visited
-            mazeMap[nx][ny].priorPos = pos;
-            //Update Cell position to newly visited location
-            pos = {
-              x: nx,
-              y: ny
+            mazeMap[nx][ny].priorPos = pos;//Set Currentcell as next cells Prior visited
+            pos = {//Update Cell position to newly visited location
+              x: nx, y: ny
             };
             cellsVisited++;
-            //Recursively call this method on the next tile
-            move = true;
+            move = true;//Recursively call this method on the next tile
             break;
           }
         }
       }
-
-      if (!move) {
-        //  If it failed to find a direction,
-        //  move the current position back to the prior cell and Recall the method.
-        pos = mazeMap[pos.x][pos.y].priorPos;
+      if (!move) {//  If it failed to find a direction,
+        pos = mazeMap[pos.x][pos.y].priorPos;//  move the current position back to the prior cell and Recall the method.
       }
       if (numCells == cellsVisited) {
         isComp = true;
       }
     }
   }
-
   function defineStartEnd() {
     switch (rand(4)) {
       case 0:
         startCoord = {
-          x: 0,
-          y: 0
+          x: 0, y: 0
         };
         endCoord = {
-          x: height - 1,
-          y: width - 1
+          x: height - 1, y: width - 1
         };
         break;
       case 1:
         startCoord = {
-          x: 0,
-          y: width - 1
+          x: 0, y: width - 1
         };
         endCoord = {
-          x: height - 1,
-          y: 0
+          x: height - 1, y: 0
         };
         break;
       case 2:
         startCoord = {
-          x: height - 1,
-          y: 0
+          x: height - 1, y: 0
         };
         endCoord = {
-          x: 0,
-          y: width - 1
+          x: 0, y: width - 1
         };
         break;
       case 3:
         startCoord = {
-          x: height - 1,
-          y: width - 1
+          x: height - 1, y: width - 1
         };
         endCoord = {
-          x: 0,
-          y: 0
+          x: 0, y: 0
         };
         break;
     }
   }
-
   genMap();
   defineStartEnd();
   defineMaze();
 }
-
 function DrawMaze(Maze, ctx, cellsize, endSprite = null) {
   var map = Maze.map();
   var cellSize = cellsize;
   var drawEndMethod;
   ctx.lineWidth = cellSize / 40;
-
   this.redrawMaze = function (size) {
     cellSize = size;
     ctx.lineWidth = cellSize / 50;
     drawMap();
     drawEndMethod();
   };
-
   function drawCell(xCord, yCord, cell) {
     var x = xCord * cellSize;
     var y = yCord * cellSize;
-
     if (cell.n == false) {
       ctx.beginPath();
       ctx.moveTo(x, y);
@@ -290,7 +239,6 @@ function DrawMaze(Maze, ctx, cellsize, endSprite = null) {
       ctx.stroke();
     }
   }
-
   function drawMap() {
     for (x = 0; x < map.length; x++) {
       for (y = 0; y < map[x].length; y++) {
@@ -298,7 +246,6 @@ function DrawMaze(Maze, ctx, cellsize, endSprite = null) {
       }
     }
   }
-
   function drawEndFlag() {
     var coord = Maze.endCoord();
     var gridSize = 4;
@@ -326,7 +273,6 @@ function DrawMaze(Maze, ctx, cellsize, endSprite = null) {
       }
     }
   }
-
   function drawEndSprite() {
     var offsetLeft = cellSize / 50;
     var offsetRight = cellSize / 25;
@@ -335,20 +281,15 @@ function DrawMaze(Maze, ctx, cellsize, endSprite = null) {
       endSprite,
       2,
       2,
-      endSprite.width,
-      endSprite.height,
-      coord.x * cellSize + offsetLeft,
-      coord.y * cellSize + offsetLeft,
-      cellSize - offsetRight,
-      cellSize - offsetRight
+      endSprite.width, endSprite.height,
+      coord.x * cellSize + offsetLeft, coord.y * cellSize + offsetLeft,
+      cellSize - offsetRight,cellSize - offsetRight
     );
   }
-
   function clear() {
     var canvasSize = cellSize * map.length;
     ctx.clearRect(0, 0, canvasSize, canvasSize);
   }
-
   if (endSprite != null) {
     drawEndMethod = drawEndSprite;
   } else {
@@ -358,7 +299,6 @@ function DrawMaze(Maze, ctx, cellsize, endSprite = null) {
   drawMap();
   drawEndMethod();
 }
-
 function Player(maze, c, _cellsize, onComplete, sprite = null) {
   var ctx = c.getContext("2d");
   var drawSprite;
@@ -397,7 +337,6 @@ function Player(maze, c, _cellsize, onComplete, sprite = null) {
       player.unbindKeyDown();
     }
   }
-
   function drawSpriteImg(coord) {
     var offsetLeft = cellSize / 50;
     var offsetRight = cellSize / 25;
@@ -417,7 +356,6 @@ function Player(maze, c, _cellsize, onComplete, sprite = null) {
       player.unbindKeyDown();
     }
   }
-
   function removeSprite(coord) {
     var offsetLeft = cellSize / 50;
     var offsetRight = cellSize / 25;
@@ -428,7 +366,6 @@ function Player(maze, c, _cellsize, onComplete, sprite = null) {
       cellSize - offsetRight
     );
   }
-
   function check(e) {
     var cell = map[cellCoords.x][cellCoords.y];
     moves++;
@@ -438,8 +375,7 @@ function Player(maze, c, _cellsize, onComplete, sprite = null) {
         if (cell.w == true) {
           removeSprite(cellCoords);
           cellCoords = {
-            x: cellCoords.x - 1,
-            y: cellCoords.y
+            x: cellCoords.x - 1, y: cellCoords.y
           };
           drawSprite(cellCoords);
         }
@@ -449,8 +385,7 @@ function Player(maze, c, _cellsize, onComplete, sprite = null) {
         if (cell.n == true) {
           removeSprite(cellCoords);
           cellCoords = {
-            x: cellCoords.x,
-            y: cellCoords.y - 1
+            x: cellCoords.x, y: cellCoords.y - 1
           };
           drawSprite(cellCoords);
         }
@@ -460,8 +395,7 @@ function Player(maze, c, _cellsize, onComplete, sprite = null) {
         if (cell.e == true) {
           removeSprite(cellCoords);
           cellCoords = {
-            x: cellCoords.x + 1,
-            y: cellCoords.y
+            x: cellCoords.x + 1, y: cellCoords.y
           };
           drawSprite(cellCoords);
         }
@@ -471,26 +405,18 @@ function Player(maze, c, _cellsize, onComplete, sprite = null) {
         if (cell.s == true) {
           removeSprite(cellCoords);
           cellCoords = {
-            x: cellCoords.x,
-            y: cellCoords.y + 1
+            x: cellCoords.x, y: cellCoords.y + 1
           };
           drawSprite(cellCoords);
         }
         break;
     }
   }
-
   this.bindKeyDown = function () {
     window.addEventListener("keydown", check, false);
-
     $("#view").swipe({
       swipe: function (
-        event,
-        direction,
-        distance,
-        duration,
-        fingerCount,
-        fingerData
+        event,direction,distance,duration,fingerCount,fingerData
       ) {
         console.log(direction);
         switch (direction) {
@@ -519,17 +445,13 @@ function Player(maze, c, _cellsize, onComplete, sprite = null) {
       threshold: 0
     });
   };
-
   this.unbindKeyDown = function () {
     window.removeEventListener("keydown", check, false);
     $("#view").swipe("destroy");
   };
-
   drawSprite(maze.startCoord());
-
   this.bindKeyDown();
 }
-
 var mazeCanvas = document.getElementById("mazeCanvas");
 var ctx = mazeCanvas.getContext("2d");
 var sprite;
@@ -537,8 +459,6 @@ var finishSprite;
 var maze, draw, player;
 var cellSize;
 var difficulty;
-//sprite.src = 'media/sprite.png';
-
 window.onload = function () {
   let viewWidth = $("#view").width();
   let viewHeight = $("#view").height();
@@ -549,11 +469,7 @@ window.onload = function () {
     ctx.canvas.width = viewWidth - viewWidth / 100;
     ctx.canvas.height = viewWidth - viewWidth / 100;
   }
- 
-    // *Add an event listener to all buttons
-  
-   //Load and edit sprites
-  var completeOne = false;
+  var completeOne = false;//Load and edit sprites Add an event listener to all buttons
   var completeTwo = false;
   var isComplete = () => {
     if (completeOne === true && completeTwo === true) {
@@ -575,7 +491,6 @@ window.onload = function () {
     console.log(completeOne);
     isComplete();
   };
-
   finishSprite = new Image();
   finishSprite.src = "./LS20240304180438.png" +
     "?" +
@@ -587,9 +502,7 @@ window.onload = function () {
     console.log(completeTwo);
     isComplete();
   };
-
 };
-
 window.onresize = function () {
   let viewWidth = $("#view").width();
   let viewHeight = $("#view").height();
@@ -606,7 +519,6 @@ window.onresize = function () {
     player.redrawPlayer(cellSize);
   }
 };
-
 function makeMaze() {
   if (player != undefined) {
     player.unbindKeyDown();
@@ -621,19 +533,13 @@ function makeMaze() {
   if (document.getElementById("mazeContainer").style.opacity < "100") {
     document.getElementById("mazeContainer").style.opacity = "100";
   }
-
 }
-document.addEventListener('DOMContentLoaded', function () {
-  // Load the keyboard click sound
+document.addEventListener('DOMContentLoaded', function () {// Load the keyboard click sound
   const clickSound = new Audio('tap.mp3'); // Replace 'keyboard_click_sound.mp3' with the path to your sound file
-
-  // Listen for keydown event
-  document.addEventListener('keydown', function (event) {
-      // Check if the key pressed is not the modifier keys (Shift, Ctrl, Alt, Meta)
-      if (!event.shiftKey && !event.ctrlKey && !event.altKey && !event.metaKey) {
+  document.addEventListener('keydown', function (event) {// Listen for keydown event
+    if (!event.shiftKey && !event.ctrlKey && !event.altKey && !event.metaKey) {// Check if the key pressed is not the modifier keys (Shift, Ctrl, Alt, Meta)
           clickSound.currentTime = 0; // Reset the audio to the beginning
           clickSound.play(); // Play the keyboard click sound
       }
   });
 });
-
